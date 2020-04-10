@@ -4,10 +4,10 @@ import 'package:cloudinary_client/src/credentials.dart';
 import 'package:dio/dio.dart';
 import 'base_api.dart';
 
-class VideoClient extends CloudinaryBaseApi {
-  final CloudinaryCredentials credentials;
+class Video extends CloudinaryBaseApi {
+  final Credentials credentials;
 
-  VideoClient(this.credentials);
+  Video(this.credentials);
 
   Future<Map<String, dynamic>> uploadFromBytes(
     Uint8List file,

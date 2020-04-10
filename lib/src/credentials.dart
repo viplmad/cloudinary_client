@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 
-class CloudinaryCredentials {
+class Credentials {
   final String apiKey;
   final String apiSecret;
   final String cloudName;
   final String baseUrl = "https://api.cloudinary.com/v1_1/";
 
-  CloudinaryCredentials(this.apiKey, this.apiSecret, this.cloudName);
+  Credentials(this.apiKey, this.apiSecret, this.cloudName);
   String getSignature(String folder, String publicId, int timeStamp) {
     var buffer = StringBuffer();
     if (folder != null) {

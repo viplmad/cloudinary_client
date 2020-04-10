@@ -4,10 +4,10 @@ import 'package:cloudinary_client/src/credentials.dart';
 import 'package:dio/dio.dart';
 import 'base_api.dart';
 
-class ImageClient extends CloudinaryBaseApi {
-  CloudinaryCredentials credentials;
+class Image extends CloudinaryBaseApi {
+  Credentials credentials;
 
-  ImageClient(this.credentials);
+  Image(this.credentials);
 
   Future<Map<String, dynamic>> uploadFromBytes(
     Uint8List file,
