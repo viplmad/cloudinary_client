@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:crypto/crypto.dart';
 
 class BaseApi {
   final Dio _dio = Dio();
+  String cloudName;
+  String apiKey;
+  String apiSecret;
 
   String API_BASE_URL = "https://api.cloudinary.com/v1_1/";
 
@@ -33,5 +39,19 @@ class BaseApi {
     else
       return await dio.post(url);
   }
-  
+
+  String getSignature(String folder, String publicId, int timeStamp) {
+    var buffer = StringBuffer();
+    if (folder != null) {
+      buffer.write("folder=" + folder + "&");
+    }
+    if (publicId != null) {
+      buffer.write("public_id=" + publicId + "&");
+    }
+    buffer.write("timestamp=" + timeStamp.toString() + apiSecret);
+
+    var bytes = utf8.encode(buffer.toString().trim()); // data being hashed
+
+    return sha1.convert(bytes).toString();
+  }
 }

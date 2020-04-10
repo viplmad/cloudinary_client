@@ -6,7 +6,7 @@ Dart wrapper for cloudinary apis.
 
 ## initialization
 ```
-CloudinaryClient client = new CloudinaryClient(<API_KEY, <API_SECRET>, <cloud_name>);
+CloudinaryClient client = CloudinaryClient(<API_KEY, <API_SECRET>, <cloud_name>);
 ```
 
 ## uploading images

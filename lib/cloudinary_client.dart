@@ -1,10 +1,7 @@
 library cloudinary_imageClient;
 
-import 'package:cloudinary_client/data/VideoClient.dart';
-import 'package:cloudinary_client/models/CloudinaryResponse.dart';
-import 'package:dio/dio.dart';
-
-import 'data/ImageClient.dart';
+import 'package:cloudinary_client/src/image_client.dart';
+import 'package:cloudinary_client/src/video_client.dart';
 
 class CloudinaryClient {
   String _apiKey;
@@ -21,18 +18,18 @@ class CloudinaryClient {
     _videoClient = VideoClient(_apiKey, _apiSecret, _cloudName);
   }
 
-  Future<CloudinaryResponse> uploadImage(String imagePath,
+  Future<Map<String, dynamic>> uploadImage(String imagePath,
       {String filename, String folder}) async {
     return _imageClient.uploadImage(imagePath,
         imageFilename: filename, folder: folder);
   }
 
-  Future<List<CloudinaryResponse>> uploadImages(List<String> imagePaths,
+  Future<List<Map<String, dynamic>>> uploadImages(List<String> imagePaths,
       {String filename, String folder}) async {
-    List<CloudinaryResponse> responses = List();
+    List<Map<String, dynamic>> responses = List();
 
     for (var path in imagePaths) {
-      CloudinaryResponse resp = await _imageClient.uploadImage(path,
+      Map<String, dynamic> resp = await _imageClient.uploadImage(path,
           imageFilename: filename, folder: folder);
       responses.add(resp);
     }
@@ -44,14 +41,14 @@ class CloudinaryClient {
     List<String> responses = List();
 
     for (var path in imagePaths) {
-      CloudinaryResponse resp = await _imageClient.uploadImage(path,
+      Map<String, dynamic> resp = await _imageClient.uploadImage(path,
           imageFilename: filename, folder: folder);
-      responses.add(resp.url);
+      responses.add(resp['url']);
     }
     return responses;
   }
 
-  Future<CloudinaryResponse> uploadVideo(String videoPath,
+  Future<Map<String, dynamic>> uploadVideo(String videoPath,
       {String filename, String folder}) async {
     return _videoClient.uploadVideo(videoPath,
         videoFileName: filename, folder: folder);
