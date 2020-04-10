@@ -1,17 +1,10 @@
-import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:crypto/crypto.dart';
 
-class BaseApi {
+abstract class CloudinaryBaseApi {
   final Dio _dio = Dio();
-  String cloudName;
-  String apiKey;
-  String apiSecret;
-
-  String API_BASE_URL = "https://api.cloudinary.com/v1_1/";
-
-  BaseApi();
+  final String API_BASE_URL = "https://api.cloudinary.com/v1_1/";
 
   Future<Dio> getApiClient({InterceptorsWrapper interceptor}) async {
     _dio.options.baseUrl = API_BASE_URL;
@@ -22,36 +15,43 @@ class BaseApi {
     return _dio;
   }
 
-  Future<Response<T>> httpGet<T>(String url,
-      {Map<String, dynamic> params}) async {
-    Dio dio = await getApiClient();
-    if (params != null)
-      return await dio.get(url, queryParameters: params);
-    else
-      return await dio.get(url);
+  Future<Map<String, dynamic>> upload(String path,
+      {String filename, String folder});
+  Future<Map<String, dynamic>> uploadFromBytes(Uint8List file, String filename,
+      {String folder});
+
+  Future<List<Map<String, dynamic>>> uploadMultiple(
+    List<String> paths, {
+    List<String> filenames,
+    String folder,
+  }) async {
+    List<Map<String, dynamic>> responses = [];
+    filenames = filenames ?? paths;
+    for (int i = 0; i < paths.length; i++) {
+      Map<String, dynamic> resp = await upload(
+        paths[i],
+        filename: filenames[i],
+        folder: folder,
+      );
+      responses.add(resp);
+    }
+    return responses;
   }
 
-  Future<Response<T>> httpPost<T>(
-      String url, Map<String, dynamic> params) async {
-    Dio dio = await getApiClient();
-    if (params != null)
-      return await dio.post(url, data: params);
-    else
-      return await dio.post(url);
-  }
-
-  String getSignature(String folder, String publicId, int timeStamp) {
-    var buffer = StringBuffer();
-    if (folder != null) {
-      buffer.write("folder=" + folder + "&");
+  Future<List<Map<String, dynamic>>> uploadMultipleFromBytes(
+    List<Uint8List> files,
+    List<String> filenames, {
+    String folder,
+  }) async {
+    List<Map<String, dynamic>> responses = [];
+    for (int i = 0; i < files.length; i++) {
+      Map<String, dynamic> resp = await uploadFromBytes(
+        files[i],
+        filenames[i],
+        folder: folder,
+      );
+      responses.add(resp);
     }
-    if (publicId != null) {
-      buffer.write("public_id=" + publicId + "&");
-    }
-    buffer.write("timestamp=" + timeStamp.toString() + apiSecret);
-
-    var bytes = utf8.encode(buffer.toString().trim()); // data being hashed
-
-    return sha1.convert(bytes).toString();
+    return responses;
   }
 }

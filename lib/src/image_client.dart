@@ -1,106 +1,80 @@
 import 'dart:typed_data';
 
+import 'package:cloudinary_client/src/credentials.dart';
 import 'package:dio/dio.dart';
 import 'base_api.dart';
 
-class ImageClient extends BaseApi {
-  @override
-  String cloudName;
-  @override
-  String apiKey;
-  @override
-  String apiSecret;
+class ImageClient extends CloudinaryBaseApi {
+  CloudinaryCredentials credentials;
 
-  ImageClient(this.apiKey, this.apiSecret, this.cloudName);
+  ImageClient(this.credentials);
 
-  Future<Map<String, dynamic>> uploadImageFromBytes(
-    Uint8List image,
-    String imageFilename, {
+  Future<Map<String, dynamic>> uploadFromBytes(
+    Uint8List file,
+    String filename, {
     String folder,
   }) async {
-    int timeStamp = DateTime.now().millisecondsSinceEpoch;
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    Map<String, dynamic> params = {};
-    if (apiSecret == null || apiKey == null) {
-      throw Exception("apiKey and apiSecret must not be null");
-    }
-
-    params["api_key"] = apiKey;
-
-    if (image == null) {
+    if (file == null) {
       throw Exception("image must not be null");
     }
-    if (imageFilename == null) {
+    if (filename == null) {
       throw Exception("image must not be null");
     }
-    String publicId = imageFilename.split('.')[0] + "_" + timeStamp.toString();
+    String publicId = filename.split('.')[0] + "_" + timestamp.toString();
 
-    if (folder != null) {
-      params["folder"] = folder;
-    }
-
-    if (publicId != null) {
-      params["public_id"] = publicId;
-    }
-
-    params["file"] =
-        await MultipartFile.fromBytes(image.toList(), filename: imageFilename);
-    params["timestamp"] = timeStamp;
-    params["signature"] = getSignature(folder, publicId, timeStamp);
+    Map<String, dynamic> params = {
+      "file": await MultipartFile.fromBytes(file.toList(), filename: filename),
+      "api_key": credentials.apiKey,
+      "timestamp": timestamp,
+      "signature": credentials.getSignature(folder, publicId, timestamp),
+      if (folder != null) "folder": folder,
+      if (publicId != null) "public_id": publicId,
+    };
 
     FormData formData = FormData.fromMap(params);
 
     Dio dio = await getApiClient();
     Response response =
-        await dio.post(cloudName + "/image/upload", data: formData);
+        await dio.post(credentials.cloudName + "/image/upload", data: formData);
 
     return response.data;
   }
 
-  Future<Map<String, dynamic>> uploadImage(
-    String imagePath, {
-    String imageFilename,
+  Future<Map<String, dynamic>> upload(
+    String path, {
+    String filename,
     String folder,
   }) async {
-    int timeStamp = DateTime.now().millisecondsSinceEpoch;
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    Map<String, dynamic> params = {};
-    if (apiSecret == null || apiKey == null) {
-      throw Exception("apiKey and apiSecret must not be null");
-    }
-
-    params["api_key"] = apiKey;
-
-    if (imagePath == null) {
+    if (path == null) {
       throw Exception("imagePath must not be null");
     }
-    String publicId = imagePath.split('/').last;
+    String publicId = path.split('/').last;
     publicId = publicId.split('.')[0];
 
-    if (imageFilename != null) {
-      publicId = imageFilename.split('.')[0] + "_" + timeStamp.toString();
+    if (filename != null) {
+      publicId = filename.split('.')[0] + "_" + timestamp.toString();
     } else {
-      imageFilename = publicId;
+      filename = publicId;
     }
 
-    if (folder != null) {
-      params["folder"] = folder;
-    }
-
-    if (publicId != null) {
-      params["public_id"] = publicId;
-    }
-
-    params["file"] =
-        await MultipartFile.fromFile(imagePath, filename: imageFilename);
-    params["timestamp"] = timeStamp;
-    params["signature"] = getSignature(folder, publicId, timeStamp);
+    Map<String, dynamic> params = {
+      "file": await MultipartFile.fromFile(path, filename: filename),
+      "api_key": credentials.apiKey,
+      "timestamp": timestamp,
+      "signature": credentials.getSignature(folder, publicId, timestamp),
+      if (folder != null) "folder": folder,
+      if (publicId != null) "public_id": publicId,
+    };
 
     FormData formData = FormData.fromMap(params);
 
     Dio dio = await getApiClient();
     Response response =
-        await dio.post(cloudName + "/image/upload", data: formData);
+        await dio.post(credentials.cloudName + "/image/upload", data: formData);
 
     return response.data;
   }

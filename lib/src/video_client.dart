@@ -1,107 +1,80 @@
 import 'dart:typed_data';
 
+import 'package:cloudinary_client/src/credentials.dart';
 import 'package:dio/dio.dart';
 import 'base_api.dart';
 
-class VideoClient extends BaseApi {
-  @override
-  String cloudName;
-  @override
-  String apiKey;
-  @override
-  String apiSecret;
+class VideoClient extends CloudinaryBaseApi {
+  final CloudinaryCredentials credentials;
 
-  VideoClient(this.apiKey, this.apiSecret, this.cloudName);
+  VideoClient(this.credentials);
 
-  Future<Map<String, dynamic>> uploadVideoFromBytes(
-    Uint8List video,
-    String videoFileName, {
+  Future<Map<String, dynamic>> uploadFromBytes(
+    Uint8List file,
+    String filename, {
     String folder,
   }) async {
-    int timeStamp = DateTime.now().millisecondsSinceEpoch;
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    Map<String, dynamic> params = {};
-    if (apiSecret == null || apiKey == null) {
-      throw Exception("apiKey and apiSecret must not be null");
-    }
-
-    params["api_key"] = apiKey;
-
-    if (video == null) {
+    if (file == null) {
       throw Exception("video must not be null");
     }
-    if (videoFileName == null) {
+    if (filename == null) {
       throw Exception("videoFileName must not be null");
     }
 
-    String publicId = videoFileName.split('.')[0] + "_" + timeStamp.toString();
+    String publicId = filename.split('.')[0] + "_" + timestamp.toString();
 
-    if (folder != null) {
-      params["folder"] = folder;
-    }
-
-    if (publicId != null) {
-      params["public_id"] = publicId;
-    }
-
-    params["file"] =
-        await MultipartFile.fromBytes(video.toList(), filename: videoFileName);
-    params["timestamp"] = timeStamp;
-    params["signature"] = getSignature(folder, publicId, timeStamp);
+    Map<String, dynamic> params = {
+      "file": await MultipartFile.fromBytes(file.toList(), filename: filename),
+      "api_key": credentials.apiKey,
+      "timestamp": timestamp,
+      "signature": credentials.getSignature(folder, publicId, timestamp),
+      if (folder != null) "folder": folder,
+      if (publicId != null) "public_id": publicId,
+    };
 
     FormData formData = FormData.fromMap(params);
 
     Dio dio = await getApiClient();
     Response response =
-        await dio.post(cloudName + "/video/upload", data: formData);
+        await dio.post(credentials.cloudName + "/video/upload", data: formData);
 
     return response.data;
   }
 
-  Future<Map<String, dynamic>> uploadVideo(
-    String videoPath, {
-    String videoFileName,
+  Future<Map<String, dynamic>> upload(
+    String path, {
+    String filename,
     String folder,
   }) async {
-    int timeStamp = DateTime.now().millisecondsSinceEpoch;
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    Map<String, dynamic> params = {};
-    if (apiSecret == null || apiKey == null) {
-      throw Exception("apiKey and apiSecret must not be null");
-    }
-
-    params["api_key"] = apiKey;
-
-    if (videoPath == null) {
+    if (path == null) {
       throw Exception("videoPath must not be null");
     }
-    String publicId = videoPath.split('/').last;
+    String publicId = path.split('/').last;
     publicId = publicId.split('.')[0];
 
-    if (videoFileName != null) {
-      publicId = videoFileName.split('.')[0] + "_" + timeStamp.toString();
+    if (filename != null) {
+      publicId = filename.split('.')[0] + "_" + timestamp.toString();
     } else {
-      videoFileName = publicId;
+      filename = publicId;
     }
 
-    if (folder != null) {
-      params["folder"] = folder;
-    }
-
-    if (publicId != null) {
-      params["public_id"] = publicId;
-    }
-
-    params["file"] =
-        await MultipartFile.fromFile(videoPath, filename: videoFileName);
-    params["timestamp"] = timeStamp;
-    params["signature"] = getSignature(folder, publicId, timeStamp);
-
+    Map<String, dynamic> params = {
+      "file": await MultipartFile.fromFile(path, filename: filename),
+      "api_key": credentials.apiKey,
+      "timestamp": timestamp,
+      "signature": credentials.getSignature(folder, publicId, timestamp),
+      if (folder != null) "folder": folder,
+      if (publicId != null) "public_id": publicId,
+    };
     FormData formData = FormData.fromMap(params);
 
     Dio dio = await getApiClient();
     Response response =
-        await dio.post(cloudName + "/video/upload", data: formData);
+        await dio.post(credentials.cloudName + "/video/upload", data: formData);
 
     return response.data;
   }
