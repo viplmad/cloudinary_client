@@ -1,22 +1,15 @@
 import 'dart:typed_data';
 
-import 'package:dio/dio.dart';
-
 abstract class CloudinaryBaseApi {
-  final Dio _dio = Dio();
-  final String API_BASE_URL = "https://api.cloudinary.com/v1_1/";
+  final String baseUrl;
 
-  Future<Dio> getApiClient({InterceptorsWrapper interceptor}) async {
-    _dio.options.baseUrl = API_BASE_URL;
-    _dio.interceptors.clear();
-    if (interceptor != null) {
-      _dio.interceptors.add(interceptor);
-    }
-    return _dio;
-  }
+  CloudinaryBaseApi() : baseUrl = "https://api.cloudinary.com/v1_1/";
 
   Future<Map<String, dynamic>> upload(String path,
       {String filename, String folder});
+  Future<Map<String, dynamic>> uploadFromUrl(String url,
+      {String filename, String folder});
+
   Future<Map<String, dynamic>> uploadFromBytes(Uint8List file, String filename,
       {String folder});
 

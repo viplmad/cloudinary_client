@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cloudinary_client/src/credentials.dart';
-import 'package:dio/dio.dart';
+import 'package:http/http.dart';
 import 'base_api.dart';
 
 class Image extends CloudinaryBaseApi {
@@ -24,22 +25,21 @@ class Image extends CloudinaryBaseApi {
     }
     String publicId = filename.split('.')[0] + "_" + timestamp.toString();
 
-    Map<String, dynamic> params = {
-      "file": await MultipartFile.fromBytes(file.toList(), filename: filename),
-      "api_key": credentials.apiKey,
-      "timestamp": timestamp,
-      "signature": credentials.getSignature(folder, publicId, timestamp),
-      if (folder != null) "folder": folder,
-      if (publicId != null) "public_id": publicId,
-    };
+    var req = MultipartRequest(
+        'POST', Uri.parse(baseUrl + credentials.cloudName + "/image/upload"))
+      ..fields.addAll({
+        "api_key": credentials.apiKey,
+        "timestamp": timestamp.toString(),
+        "signature": credentials.getSignature(folder, publicId, timestamp),
+        if (folder != null) "folder": folder,
+        if (publicId != null) "public_id": publicId,
+      })
+      ..files.add(await MultipartFile.fromBytes('file', file.toList(),
+          filename: filename));
 
-    FormData formData = FormData.fromMap(params);
-
-    Dio dio = await getApiClient();
-    Response response =
-        await dio.post(credentials.cloudName + "/image/upload", data: formData);
-
-    return response.data;
+    var resp = await req.send();
+    var respBody = await resp.stream.bytesToString();
+    return jsonDecode(respBody);
   }
 
   Future<Map<String, dynamic>> upload(
@@ -61,21 +61,54 @@ class Image extends CloudinaryBaseApi {
       filename = publicId;
     }
 
-    Map<String, dynamic> params = {
-      "file": await MultipartFile.fromFile(path, filename: filename),
-      "api_key": credentials.apiKey,
-      "timestamp": timestamp,
-      "signature": credentials.getSignature(folder, publicId, timestamp),
-      if (folder != null) "folder": folder,
-      if (publicId != null) "public_id": publicId,
-    };
+    var req = MultipartRequest(
+        'POST', Uri.parse(baseUrl + credentials.cloudName + "/image/upload"))
+      ..fields.addAll({
+        "api_key": credentials.apiKey,
+        "timestamp": timestamp.toString(),
+        "signature": credentials.getSignature(folder, publicId, timestamp),
+        if (folder != null) "folder": folder,
+        if (publicId != null) "public_id": publicId,
+      })
+      ..files
+          .add(await MultipartFile.fromPath('file', path, filename: filename));
 
-    FormData formData = FormData.fromMap(params);
+    var resp = await req.send();
+    var respBody = await resp.stream.bytesToString();
+    return jsonDecode(respBody);
+  }
 
-    Dio dio = await getApiClient();
-    Response response =
-        await dio.post(credentials.cloudName + "/image/upload", data: formData);
+  @override
+  Future<Map<String, dynamic>> uploadFromUrl(String url,
+      {String filename, String folder}) async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    return response.data;
+    if (url == null) {
+      throw Exception("imagePath must not be null");
+    }
+    var path = Uri.parse(url).path;
+
+    String publicId = path.split('/').last;
+    publicId = publicId.split('.')[0];
+
+    if (filename != null) {
+      publicId = filename.split('.')[0] + "_" + timestamp.toString();
+    } else {
+      filename = publicId;
+    }
+
+    var req = MultipartRequest(
+        'POST', Uri.parse(baseUrl + credentials.cloudName + "/image/upload"))
+      ..fields.addAll({
+        "file": url,
+        "api_key": credentials.apiKey,
+        "timestamp": timestamp.toString(),
+        "signature": credentials.getSignature(folder, publicId, timestamp),
+        if (folder != null) "folder": folder,
+        if (publicId != null) "public_id": publicId,
+      });
+    var resp = await req.send();
+    var respBody = await resp.stream.bytesToString();
+    return jsonDecode(respBody);
   }
 }
