@@ -25,7 +25,7 @@ class Image extends CloudinaryBaseApi {
     if (filename == null) {
       throw Exception("image must not be null");
     }
-    String publicId = filename.split('.')[0] + "_" + timestamp.toString();
+    String publicId = filename.split('.')[0];
     var fields = {
       "api_key": credentials.apiKey,
       if (publicId != null) "public_id": publicId,
@@ -62,7 +62,7 @@ class Image extends CloudinaryBaseApi {
     publicId = publicId.split('.')[0];
 
     if (filename != null) {
-      publicId = filename;
+      publicId = filename.split('.')[0];
     } else {
       filename = publicId;
     }
@@ -106,7 +106,7 @@ class Image extends CloudinaryBaseApi {
     publicId = publicId.split('.')[0];
 
     if (filename != null) {
-      publicId = filename;
+      publicId = filename.split('.')[0];
     } else {
       filename = publicId;
     }
