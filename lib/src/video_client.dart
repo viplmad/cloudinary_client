@@ -27,18 +27,18 @@ class Video extends CloudinaryBaseApi {
     }
 
     String publicId = filename.split('.')[0] + "_" + timestamp.toString();
-
+    var fields = {
+      "api_key": credentials.apiKey,
+      "timestamp": timestamp.toString(),
+      if (folder != null) "folder": folder,
+      if (publicId != null) "public_id": publicId,
+      "unique_filename": uniqueFilename?.toString() ?? "true",
+      if (publicId == null) "use_filename": useFilename?.toString() ?? "false",
+    };
     var req = MultipartRequest(
         'POST', Uri.parse(baseUrl + credentials.cloudName + "/video/upload"))
-      ..fields.addAll({
-        "api_key": credentials.apiKey,
-        "timestamp": timestamp.toString(),
-        "signature": credentials.getSignature(folder, publicId, timestamp),
-        if (folder != null) "folder": folder,
-        if (publicId != null) "public_id": publicId,
-        "unique_filename": uniqueFilename?.toString() ?? "true",
-        "use_filename": useFilename?.toString() ?? "false",
-      })
+      ..fields.addAll(fields)
+      ..fields['signature'] = credentials.getSignature(fields)
       ..files.add(await MultipartFile.fromBytes('file', file.toList(),
           filename: filename));
 
@@ -67,18 +67,18 @@ class Video extends CloudinaryBaseApi {
     } else {
       filename = publicId;
     }
-
+    var fields = {
+      "api_key": credentials.apiKey,
+      "timestamp": timestamp.toString(),
+      if (folder != null) "folder": folder,
+      if (publicId != null) "public_id": publicId,
+      "unique_filename": uniqueFilename?.toString() ?? "true",
+      if (publicId == null) "use_filename": useFilename?.toString() ?? "false",
+    };
     var req = MultipartRequest(
         'POST', Uri.parse(baseUrl + credentials.cloudName + "/video/upload"))
-      ..fields.addAll({
-        "api_key": credentials.apiKey,
-        "timestamp": timestamp.toString(),
-        "signature": credentials.getSignature(folder, publicId, timestamp),
-        if (folder != null) "folder": folder,
-        if (publicId != null) "public_id": publicId,
-        "unique_filename": uniqueFilename?.toString() ?? "true",
-        "use_filename": useFilename?.toString() ?? "false",
-      })
+      ..fields.addAll(fields)
+      ..fields['signature'] = credentials.getSignature(fields)
       ..files
           .add(await MultipartFile.fromPath('file', path, filename: filename));
 
@@ -110,19 +110,18 @@ class Video extends CloudinaryBaseApi {
     } else {
       filename = publicId;
     }
-
+    var fields = {
+      "api_key": credentials.apiKey,
+      "timestamp": timestamp.toString(),
+      if (folder != null) "folder": folder,
+      if (publicId != null) "public_id": publicId,
+      "unique_filename": uniqueFilename?.toString() ?? "true",
+      if (publicId == null) "use_filename": useFilename?.toString() ?? "false",
+    };
     var req = MultipartRequest(
         'POST', Uri.parse(baseUrl + credentials.cloudName + "/video/upload"))
-      ..fields.addAll({
-        "file": url,
-        "api_key": credentials.apiKey,
-        "timestamp": timestamp.toString(),
-        "signature": credentials.getSignature(folder, publicId, timestamp),
-        if (folder != null) "folder": folder,
-        if (publicId != null) "public_id": publicId,
-        "unique_filename": uniqueFilename?.toString() ?? "true",
-        "use_filename": useFilename?.toString() ?? "false",
-      });
+      ..fields.addAll(fields)
+      ..fields['signature'] = credentials.getSignature(fields);
     var resp = await req.send();
     var respBody = await resp.stream.bytesToString();
     return jsonDecode(respBody);
