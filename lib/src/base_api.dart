@@ -5,18 +5,42 @@ abstract class CloudinaryBaseApi {
 
   CloudinaryBaseApi() : baseUrl = "https://api.cloudinary.com/v1_1/";
 
-  Future<Map<String, dynamic>> upload(String path,
-      {String filename, String folder});
-  Future<Map<String, dynamic>> uploadFromUrl(String url,
-      {String filename, String folder});
+  String addParams(bool useFilename, bool uniqueFilename) {
+    var result =
+        '?use_filename=${useFilename ?? false}&${uniqueFilename ?? false}';
 
-  Future<Map<String, dynamic>> uploadFromBytes(Uint8List file, String filename,
-      {String folder});
+    return result;
+  }
+
+  Future<Map<String, dynamic>> upload(
+    String path, {
+    String filename,
+    String folder,
+    bool useFilename,
+    bool uniqueFilename,
+  });
+  Future<Map<String, dynamic>> uploadFromUrl(
+    String url, {
+    String filename,
+    String folder,
+    bool useFilename,
+    bool uniqueFilename,
+  });
+
+  Future<Map<String, dynamic>> uploadFromBytes(
+    Uint8List file,
+    String filename, {
+    String folder,
+    bool useFilename,
+    bool uniqueFilename,
+  });
 
   Future<List<Map<String, dynamic>>> uploadMultiple(
     List<String> paths, {
     List<String> filenames,
     String folder,
+    bool useFilename,
+    bool uniqueFilename,
   }) async {
     List<Map<String, dynamic>> responses = [];
     filenames = filenames ?? paths;

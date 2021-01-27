@@ -14,6 +14,8 @@ class Video extends CloudinaryBaseApi {
     Uint8List file,
     String filename, {
     String folder,
+    bool useFilename,
+    bool uniqueFilename,
   }) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
@@ -27,7 +29,11 @@ class Video extends CloudinaryBaseApi {
     String publicId = filename.split('.')[0] + "_" + timestamp.toString();
 
     var req = MultipartRequest(
-        'POST', Uri.parse(baseUrl + credentials.cloudName + "/video/upload"))
+        'POST',
+        Uri.parse(baseUrl +
+            credentials.cloudName +
+            "/video/upload" +
+            addParams(useFilename, uniqueFilename)))
       ..fields.addAll({
         "api_key": credentials.apiKey,
         "timestamp": timestamp.toString(),
@@ -47,6 +53,8 @@ class Video extends CloudinaryBaseApi {
     String path, {
     String filename,
     String folder,
+    bool useFilename,
+    bool uniqueFilename,
   }) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
@@ -63,7 +71,11 @@ class Video extends CloudinaryBaseApi {
     }
 
     var req = MultipartRequest(
-        'POST', Uri.parse(baseUrl + credentials.cloudName + "/video/upload"))
+        'POST',
+        Uri.parse(baseUrl +
+            credentials.cloudName +
+            "/video/upload" +
+            addParams(useFilename, uniqueFilename)))
       ..fields.addAll({
         "api_key": credentials.apiKey,
         "timestamp": timestamp.toString(),
@@ -80,8 +92,13 @@ class Video extends CloudinaryBaseApi {
   }
 
   @override
-  Future<Map<String, dynamic>> uploadFromUrl(String url,
-      {String filename, String folder}) async {
+  Future<Map<String, dynamic>> uploadFromUrl(
+    String url, {
+    String filename,
+    String folder,
+    bool useFilename,
+    bool uniqueFilename,
+  }) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
     if (url == null) {
@@ -99,7 +116,11 @@ class Video extends CloudinaryBaseApi {
     }
 
     var req = MultipartRequest(
-        'POST', Uri.parse(baseUrl + credentials.cloudName + "/video/upload"))
+        'POST',
+        Uri.parse(baseUrl +
+            credentials.cloudName +
+            "/video/upload" +
+            addParams(useFilename, uniqueFilename)))
       ..fields.addAll({
         "file": url,
         "api_key": credentials.apiKey,
