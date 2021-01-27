@@ -5,13 +5,6 @@ abstract class CloudinaryBaseApi {
 
   CloudinaryBaseApi() : baseUrl = "https://api.cloudinary.com/v1_1/";
 
-  String addParams(bool useFilename, bool uniqueFilename) {
-    var result =
-        '?use_filename=${useFilename ?? false}&${uniqueFilename ?? false}';
-
-    return result;
-  }
-
   Future<Map<String, dynamic>> upload(
     String path, {
     String filename,
