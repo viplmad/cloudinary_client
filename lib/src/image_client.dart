@@ -105,13 +105,66 @@ class Image extends CloudinaryBaseApi {
       "unique_filename": uniqueFilename.toString(),
     };
 
-    MultipartRequest req = MultipartRequest(
+    final MultipartRequest req = MultipartRequest(
         'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + "/image/upload"))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 
-    StreamedResponse resp = await req.send();
-    String respBody = await resp.stream.bytesToString();
+    final StreamedResponse resp = await req.send();
+    final String respBody = await resp.stream.bytesToString();
+    return jsonDecode(respBody);
+  }
+
+  Future<Map<String, Object?>> rename({
+    required String filename,
+    required String newFilename,
+    String? folder,
+  }) async {
+    final int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    final String folderPrepend = folder != null? folder + '/' :  '';
+    final String fromPublicId = folderPrepend + filename;
+    final String toPublicId = folderPrepend + newFilename + '_' + timestamp.toString();
+
+    final Map<String, String> fields = <String, String>{
+      "api_key": credentials.apiKey,
+      "timestamp": timestamp.toString(),
+      "from_public_id": fromPublicId,
+      "to_public_id": toPublicId,
+    };
+
+    final MultipartRequest req = MultipartRequest(
+        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + "/image/rename"))
+      ..fields.addAll(fields)
+      ..fields['signature'] = credentials.getSignature(fields);
+
+    final StreamedResponse resp = await req.send();
+    final String respBody = await resp.stream.bytesToString();
+    return jsonDecode(respBody);
+  }
+
+  Future<Map<String, Object?>> deleteImage({
+    required String filename,
+    String? folder,
+  }) async {
+    final int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    final String folderPrepend = folder != null? folder + '/' :  '';
+    final String publicId = folderPrepend + filename;
+
+    final Map<String, String> fields = <String, String>{
+      "api_key": credentials.apiKey,
+      "timestamp": timestamp.toString(),
+      "public_id": publicId,
+    };
+
+    final MultipartRequest req = MultipartRequest(
+        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + "/image/destroy"))
+      ..fields.addAll(fields)
+      ..fields['signature'] = credentials.getSignature(fields);
+
+    final StreamedResponse resp = await req.send();
+    final String respBody = await resp.stream.bytesToString();
     return jsonDecode(respBody);
   }
 }
