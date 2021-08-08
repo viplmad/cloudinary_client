@@ -143,7 +143,7 @@ class Image extends CloudinaryBaseApi {
     return jsonDecode(respBody);
   }
 
-  Future<Map<String, Object?>> deleteImage({
+  Future<Map<String, Object?>> delete({
     required String filename,
     String? folder,
   }) async {
