@@ -1,17 +1,17 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
 
 import 'base_api.dart';
 import 'credentials.dart';
+import 'cloudinary_response.dart';
 
 
 class Image extends CloudinaryBaseApi {
   const Image(Credentials credentials) : super(credentials);
 
   @override
-  Future<Map<String, Object?>> upload(
+  Future<CloudinaryResponse> upload(
     String path, {
     String? filename,
     String? folder,
@@ -42,13 +42,11 @@ class Image extends CloudinaryBaseApi {
       ..files
           .add(await MultipartFile.fromPath('file', path, filename: filename));
 
-    final StreamedResponse resp = await req.send();
-    final String respBody = await resp.stream.bytesToString();
-    return jsonDecode(respBody);
+    return executeRequest(req);
   }
 
   @override
-  Future<Map<String, Object?>> uploadFromBytes(
+  Future<CloudinaryResponse> uploadFromBytes(
     Uint8List file,
     String filename, {
     String? folder,
@@ -73,13 +71,11 @@ class Image extends CloudinaryBaseApi {
       ..files.add(await MultipartFile.fromBytes('file', file.toList(),
           filename: filename));
 
-    final StreamedResponse resp = await req.send();
-    final String respBody = await resp.stream.bytesToString();
-    return jsonDecode(respBody);
+    return executeRequest(req);
   }
 
   @override
-  Future<Map<String, Object?>> uploadFromUrl(
+  Future<CloudinaryResponse> uploadFromUrl(
     String url, {
     String? filename,
     String? folder,
@@ -110,12 +106,10 @@ class Image extends CloudinaryBaseApi {
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 
-    final StreamedResponse resp = await req.send();
-    final String respBody = await resp.stream.bytesToString();
-    return jsonDecode(respBody);
+    return executeRequest(req);
   }
 
-  Future<Map<String, Object?>> rename({
+  Future<CloudinaryResponse> rename({
     required String filename,
     required String newFilename,
     String? folder,
@@ -138,12 +132,10 @@ class Image extends CloudinaryBaseApi {
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 
-    final StreamedResponse resp = await req.send();
-    final String respBody = await resp.stream.bytesToString();
-    return jsonDecode(respBody);
+    return executeRequest(req);
   }
 
-  Future<Map<String, Object?>> delete({
+  Future<CloudinaryResponse> delete({
     required String filename,
     String? folder,
   }) async {
@@ -163,8 +155,6 @@ class Image extends CloudinaryBaseApi {
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 
-    final StreamedResponse resp = await req.send();
-    final String respBody = await resp.stream.bytesToString();
-    return jsonDecode(respBody);
+    return executeRequest(req);
   }
 }
