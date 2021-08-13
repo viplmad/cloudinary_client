@@ -13,7 +13,6 @@ class CloudinaryResponseSuccess extends CloudinaryResponse {
   final List<Object?>? tags;
   final int? bytes;
   final String? type;
-  final String? etag;
   final String? url;
   final String? secureUrl;
   final String? signature;
@@ -30,7 +29,6 @@ class CloudinaryResponseSuccess extends CloudinaryResponse {
     tags = map['tags'] as List<Object?>?,
     bytes = map['bytes'] as int?,
     type = map['type'] as String?,
-    etag = map['etag'] as String?,
     url = map['url'] as String?,
     secureUrl = map['secure_url'] as String?,
     signature = map['signature'] as String?,
@@ -48,7 +46,6 @@ class CloudinaryResponseSuccess extends CloudinaryResponse {
     data['tags'] = tags;
     data['bytes'] = bytes;
     data['type'] = type;
-    data['etag'] = etag;
     data['url'] = url;
     data['secure_url'] = secureUrl;
     data['signature'] = signature;
