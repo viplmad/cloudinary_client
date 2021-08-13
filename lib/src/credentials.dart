@@ -13,21 +13,30 @@ class Credentials {
   const Credentials(this.apiKey, this.apiSecret, this.cloudName);
 
   String getSignature(Map<String, String> fields) {
-    StringBuffer buffer = StringBuffer();
+    final List<String> sortedParams = fields.keys.toList(growable: false)..sort();
 
-    List<String> keys = fields.keys.toList();
-    keys.sort((a, b) => a.compareTo(b));
+    final StringBuffer signBuffer = StringBuffer();
+    for(int i = 0; i < sortedParams.length; i++) {
+      final String param = sortedParams[i];
 
-    fields.forEach((String k, String v) {
-      if (!_forbidden.contains(k)) {
-        buffer.write('&$k=$v');
+      if (_isNotForbiddenParam(param)) {
+        final String value = fields[param]!;
+
+        signBuffer.write('$param=$value');
+
+        if(i < sortedParams.length-1) {
+          signBuffer.write('&');
+        }
       }
-    });
+    }
+    signBuffer.write(apiSecret);
 
-    buffer.write(apiSecret);
-    List<int> bytes =
-        utf8.encode(buffer.toString().substring(1).trim()); // data being hashed
+    final List<int> bytes = utf8.encode(signBuffer.toString().trim()); // data being hashed
 
     return sha1.convert(bytes).toString();
+  }
+
+  bool _isNotForbiddenParam(String param) {
+    return !_forbidden.contains(param);
   }
 }
