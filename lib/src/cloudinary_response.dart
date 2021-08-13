@@ -20,21 +20,21 @@ class CloudinaryResponseSuccess extends CloudinaryResponse {
   final String? originalFilename;
 
   CloudinaryResponseSuccess.fromJsonMap(Map<String, Object?> map)
-  : publicId = map['public_id'] as String,
-    version = map['version'] as int,
-    width = map['width'] as int,
-    height = map['height'] as int,
-    format = map['format'] as String,
-    createdAt = map['created_at'] as String,
-    resourceType = map['resource_type'] as String,
-    tags = map['tags'] as List<Object?>,
-    bytes = map['bytes'] as int,
-    type = map['type'] as String,
-    etag = map['etag'] as String,
-    url = map['url'] as String,
-    secureUrl = map['secure_url'] as String,
-    signature = map['signature'] as String,
-    originalFilename = map['original_filename'] as String;
+  : publicId = map['public_id'] as String?,
+    version = map['version'] as int?,
+    width = map['width'] as int?,
+    height = map['height'] as int?,
+    format = map['format'] as String?,
+    createdAt = map['created_at'] as String?,
+    resourceType = map['resource_type'] as String?,
+    tags = map['tags'] as List<Object?>?,
+    bytes = map['bytes'] as int?,
+    type = map['type'] as String?,
+    etag = map['etag'] as String?,
+    url = map['url'] as String?,
+    secureUrl = map['secure_url'] as String?,
+    signature = map['signature'] as String?,
+    originalFilename = map['original_filename'] as String?;
 
   Map<String, Object?> toJson() {
     final Map<String, Object?> data = Map<String, Object?>();
