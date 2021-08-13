@@ -10,7 +10,7 @@ class CloudinaryResponseSuccess extends CloudinaryResponse {
   final String? format;
   final String? createdAt;
   final String? resourceType;
-  final List<Object>? tags;
+  final List<Object?>? tags;
   final int? bytes;
   final String? type;
   final String? etag;
