@@ -18,28 +18,24 @@ abstract class CloudinaryBaseApi {
     String path, {
     String? filename,
     String? folder,
-    bool uniqueFilename = true,
   });
 
   Future<CloudinaryResponse> uploadFromBytes(
     Uint8List file,
     String filename, {
     String? folder,
-    bool uniqueFilename = true,
   });
 
   Future<CloudinaryResponse> uploadFromUrl(
     String url, {
     String? filename,
     String? folder,
-    bool uniqueFilename = true,
   });
 
   Future<List<CloudinaryResponse>> uploadMultiple(
     List<String> paths, {
     List<String>? filenames,
     String? folder,
-    bool uniqueFilename = true,
   }) async {
     List<CloudinaryResponse> responses = [];
     filenames = filenames ?? paths;
@@ -48,7 +44,6 @@ abstract class CloudinaryBaseApi {
         paths.elementAt(i),
         filename: filenames.elementAt(i),
         folder: folder,
-        uniqueFilename: uniqueFilename,
       );
       responses.add(resp);
     }
@@ -76,6 +71,10 @@ abstract class CloudinaryBaseApi {
     try {
 
       final StreamedResponse resp = await req.send();
+      if(resp.statusCode >= 400) {
+        return CloudinaryResponseError(await resp.stream.bytesToString());
+      }
+
       final String respBody = await resp.stream.bytesToString();
       Map<String, Object?> jsonMap = jsonDecode(respBody);
       return CloudinaryResponseSuccess.fromJsonMap(jsonMap);

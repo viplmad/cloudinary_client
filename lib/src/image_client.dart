@@ -15,7 +15,6 @@ class Image extends CloudinaryBaseApi {
     String path, {
     String? filename,
     String? folder,
-    bool uniqueFilename = true,
   }) async {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
 
@@ -32,7 +31,6 @@ class Image extends CloudinaryBaseApi {
       "timestamp": timestamp.toString(),
       "public_id": publicId,
       if (folder != null) "folder": folder,
-      "unique_filename": uniqueFilename.toString(),
     };
 
     final MultipartRequest req = MultipartRequest(
@@ -50,7 +48,6 @@ class Image extends CloudinaryBaseApi {
     Uint8List file,
     String filename, {
     String? folder,
-    bool uniqueFilename = true,
   }) async {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
 
@@ -61,7 +58,6 @@ class Image extends CloudinaryBaseApi {
       "timestamp": timestamp.toString(),
       "public_id": publicId,
       if (folder != null) "folder": folder,
-      "unique_filename": uniqueFilename.toString(),
     };
 
     final MultipartRequest req = MultipartRequest(
@@ -79,7 +75,6 @@ class Image extends CloudinaryBaseApi {
     String url, {
     String? filename,
     String? folder,
-    bool uniqueFilename = true,
   }) async {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
 
@@ -98,7 +93,6 @@ class Image extends CloudinaryBaseApi {
       "timestamp": timestamp.toString(),
       "public_id": publicId,
       if (folder != null) "folder": folder,
-      "unique_filename": uniqueFilename.toString(),
     };
 
     final MultipartRequest req = MultipartRequest(
