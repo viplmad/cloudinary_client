@@ -19,7 +19,7 @@ class CloudinaryResponseSuccess extends CloudinaryResponse {
   final String? signature;
   final String? originalFilename;
 
-  CloudinaryResponseSuccess.fromJsonMap(Map<String, dynamic> map)
+  CloudinaryResponseSuccess.fromJsonMap(Map<String, Object?> map)
   : publicId = map['public_id'] as String,
     version = map['version'] as int,
     width = map['width'] as int,
@@ -27,7 +27,7 @@ class CloudinaryResponseSuccess extends CloudinaryResponse {
     format = map['format'] as String,
     createdAt = map['created_at'] as String,
     resourceType = map['resource_type'] as String,
-    tags = map['tags'] as List<Object>,
+    tags = map['tags'] as List<Object?>,
     bytes = map['bytes'] as int,
     type = map['type'] as String,
     etag = map['etag'] as String,
@@ -36,8 +36,8 @@ class CloudinaryResponseSuccess extends CloudinaryResponse {
     signature = map['signature'] as String,
     originalFilename = map['original_filename'] as String;
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+  Map<String, Object?> toJson() {
+    final Map<String, Object?> data = Map<String, Object?>();
     data['public_id'] = publicId;
     data['version'] = version;
     data['width'] = width;
