@@ -21,20 +21,20 @@ class Image extends CloudinaryBaseApi {
     String publicId = getPublicIdFromPath(path);
 
     if (filename != null) {
-      publicId = filename.split('.').first + "_" + timestamp.toString();
+      publicId = filename.split('.').first + '_' + timestamp.toString();
     } else {
       filename = publicId;
     }
 
     final Map<String, String> fields = <String, String>{
-      "api_key": credentials.apiKey,
-      "timestamp": timestamp.toString(),
-      "public_id": publicId,
-      if (folder != null) "folder": folder,
+      'api_key': credentials.apiKey,
+      'timestamp': timestamp.toString(),
+      'public_id': publicId,
+      if (folder != null) 'folder': folder,
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + "/image/upload"))
+        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/image/upload'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields)
       ..files
@@ -51,20 +51,20 @@ class Image extends CloudinaryBaseApi {
   }) async {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    final String publicId = filename.split('.').first + "_" + timestamp.toString();
+    final String publicId = filename.split('.').first + '_' + timestamp.toString();
 
     final Map<String, String> fields = <String, String>{
-      "api_key": credentials.apiKey,
-      "timestamp": timestamp.toString(),
-      "public_id": publicId,
-      if (folder != null) "folder": folder,
+      'api_key': credentials.apiKey,
+      'timestamp': timestamp.toString(),
+      'public_id': publicId,
+      if (folder != null) 'folder': folder,
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + "/image/upload"))
+        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/image/upload'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields)
-      ..files.add(await MultipartFile.fromBytes('file', file.toList(),
+      ..files.add(MultipartFile.fromBytes('file', file.toList(),
           filename: filename));
 
     return executeRequest(req);
@@ -83,20 +83,20 @@ class Image extends CloudinaryBaseApi {
     String publicId = getPublicIdFromPath(path);
 
     if (filename != null) {
-      publicId = filename.split('.').first + "_" + timestamp.toString();
+      publicId = filename.split('.').first + '_' + timestamp.toString();
     } else {
       filename = publicId;
     }
 
     final Map<String, String> fields = <String, String>{
-      "api_key": credentials.apiKey,
-      "timestamp": timestamp.toString(),
-      "public_id": publicId,
-      if (folder != null) "folder": folder,
+      'api_key': credentials.apiKey,
+      'timestamp': timestamp.toString(),
+      'public_id': publicId,
+      if (folder != null) 'folder': folder,
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + "/image/upload"))
+        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/image/upload'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 
@@ -115,14 +115,14 @@ class Image extends CloudinaryBaseApi {
     final String toPublicId = folderPrepend + newFilename + '_' + timestamp.toString();
 
     final Map<String, String> fields = <String, String>{
-      "api_key": credentials.apiKey,
-      "timestamp": timestamp.toString(),
-      "from_public_id": fromPublicId,
-      "to_public_id": toPublicId,
+      'api_key': credentials.apiKey,
+      'timestamp': timestamp.toString(),
+      'from_public_id': fromPublicId,
+      'to_public_id': toPublicId,
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + "/image/rename"))
+        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/image/rename'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 
@@ -139,13 +139,13 @@ class Image extends CloudinaryBaseApi {
     final String publicId = folderPrepend + filename;
 
     final Map<String, String> fields = <String, String>{
-      "api_key": credentials.apiKey,
-      "timestamp": timestamp.toString(),
-      "public_id": publicId,
+      'api_key': credentials.apiKey,
+      'timestamp': timestamp.toString(),
+      'public_id': publicId,
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + "/image/destroy"))
+        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/image/destroy'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 

@@ -37,10 +37,10 @@ abstract class CloudinaryBaseApi {
     List<String>? filenames,
     String? folder,
   }) async {
-    List<CloudinaryResponse> responses = [];
+    final List<CloudinaryResponse> responses = <CloudinaryResponse>[];
     filenames = filenames ?? paths;
     for (int i = 0; i < paths.length; i++) {
-      CloudinaryResponse resp = await upload(
+      final CloudinaryResponse resp = await upload(
         paths.elementAt(i),
         filename: filenames.elementAt(i),
         folder: folder,
@@ -55,9 +55,9 @@ abstract class CloudinaryBaseApi {
     List<String> filenames, {
     String? folder,
   }) async {
-    List<CloudinaryResponse> responses = [];
+    final List<CloudinaryResponse> responses = <CloudinaryResponse>[];
     for (int i = 0; i < files.length; i++) {
-      CloudinaryResponse resp = await uploadFromBytes(
+      final CloudinaryResponse resp = await uploadFromBytes(
         files.elementAt(i),
         filenames.elementAt(i),
         folder: folder,
@@ -76,7 +76,7 @@ abstract class CloudinaryBaseApi {
       }
 
       final String respBody = await resp.stream.bytesToString();
-      Map<String, Object?> jsonMap = jsonDecode(respBody);
+      final Map<String, Object?> jsonMap = jsonDecode(respBody) as Map<String, Object?>;
       return CloudinaryResponseSuccess.fromJsonMap(jsonMap);
 
     } catch(error) {

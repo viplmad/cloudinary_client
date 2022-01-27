@@ -35,7 +35,7 @@ class CloudinaryResponseSuccess extends CloudinaryResponse {
     originalFilename = map['original_filename'] as String?;
 
   Map<String, Object?> toJson() {
-    final Map<String, Object?> data = Map<String, Object?>();
+    final Map<String, Object?> data = <String, Object?>{};
     data['public_id'] = publicId;
     data['version'] = version;
     data['width'] = width;
