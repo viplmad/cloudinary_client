@@ -21,7 +21,7 @@ class Video extends CloudinaryBaseApi {
     String publicId = getPublicIdFromPath(path);
 
     if (filename != null) {
-      publicId = filename.split('.').first + '_' + timestamp.toString();
+      publicId = '${filename.split('.').first}_$timestamp';
     } else {
       filename = publicId;
     }
@@ -34,7 +34,7 @@ class Video extends CloudinaryBaseApi {
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/video/upload'))
+        'POST', Uri.parse('${CloudinaryBaseApi.baseUrl}${credentials.cloudName}/video/upload'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields)
       ..files
@@ -51,7 +51,7 @@ class Video extends CloudinaryBaseApi {
   }) async {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    final String publicId = filename.split('.').first + '_' + timestamp.toString();
+    final String publicId = '${filename.split('.').first}_$timestamp';
 
     final Map<String, String> fields = <String, String>{
       'api_key': credentials.apiKey,
@@ -61,7 +61,7 @@ class Video extends CloudinaryBaseApi {
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/video/upload'))
+        'POST', Uri.parse('${CloudinaryBaseApi.baseUrl}${credentials.cloudName}/video/upload'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields)
       ..files.add(MultipartFile.fromBytes('file', file.toList(),
@@ -83,7 +83,7 @@ class Video extends CloudinaryBaseApi {
     String publicId = getPublicIdFromPath(path);
 
     if (filename != null) {
-      publicId = filename.split('.').first + '_' + timestamp.toString();
+      publicId = '${filename.split('.').first}_$timestamp';
     } else {
       filename = publicId;
     }
@@ -96,7 +96,7 @@ class Video extends CloudinaryBaseApi {
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/video/upload'))
+        'POST', Uri.parse('${CloudinaryBaseApi.baseUrl}${credentials.cloudName}/video/upload'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 

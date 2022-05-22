@@ -21,7 +21,7 @@ class Image extends CloudinaryBaseApi {
     String publicId = getPublicIdFromPath(path);
 
     if (filename != null) {
-      publicId = filename.split('.').first + '_' + timestamp.toString();
+      publicId = '${filename.split('.').first}_$timestamp';
     } else {
       filename = publicId;
     }
@@ -34,7 +34,7 @@ class Image extends CloudinaryBaseApi {
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/image/upload'))
+        'POST', Uri.parse('${CloudinaryBaseApi.baseUrl}${credentials.cloudName}/image/upload'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields)
       ..files
@@ -51,7 +51,7 @@ class Image extends CloudinaryBaseApi {
   }) async {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    final String publicId = filename.split('.').first + '_' + timestamp.toString();
+    final String publicId = '${filename.split('.').first}_$timestamp';
 
     final Map<String, String> fields = <String, String>{
       'api_key': credentials.apiKey,
@@ -61,7 +61,7 @@ class Image extends CloudinaryBaseApi {
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/image/upload'))
+        'POST', Uri.parse('${CloudinaryBaseApi.baseUrl}${credentials.cloudName}/image/upload'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields)
       ..files.add(MultipartFile.fromBytes('file', file.toList(),
@@ -83,7 +83,7 @@ class Image extends CloudinaryBaseApi {
     String publicId = getPublicIdFromPath(path);
 
     if (filename != null) {
-      publicId = filename.split('.').first + '_' + timestamp.toString();
+      publicId = '${filename.split('.').first}_$timestamp';
     } else {
       filename = publicId;
     }
@@ -96,7 +96,7 @@ class Image extends CloudinaryBaseApi {
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/image/upload'))
+        'POST', Uri.parse('${CloudinaryBaseApi.baseUrl}${credentials.cloudName}/image/upload'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 
@@ -110,9 +110,9 @@ class Image extends CloudinaryBaseApi {
   }) async {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    final String folderPrepend = folder != null? folder + '/' :  '';
+    final String folderPrepend = folder != null? '$folder/' :  '';
     final String fromPublicId = folderPrepend + filename;
-    final String toPublicId = folderPrepend + newFilename + '_' + timestamp.toString();
+    final String toPublicId = '$folderPrepend${newFilename}_$timestamp';
 
     final Map<String, String> fields = <String, String>{
       'api_key': credentials.apiKey,
@@ -122,7 +122,7 @@ class Image extends CloudinaryBaseApi {
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/image/rename'))
+        'POST', Uri.parse('${CloudinaryBaseApi.baseUrl}${credentials.cloudName}/image/rename'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 
@@ -135,7 +135,7 @@ class Image extends CloudinaryBaseApi {
   }) async {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    final String folderPrepend = folder != null? folder + '/' :  '';
+    final String folderPrepend = folder != null? '$folder/' :  '';
     final String publicId = folderPrepend + filename;
 
     final Map<String, String> fields = <String, String>{
@@ -145,7 +145,7 @@ class Image extends CloudinaryBaseApi {
     };
 
     final MultipartRequest req = MultipartRequest(
-        'POST', Uri.parse(CloudinaryBaseApi.baseUrl + credentials.cloudName + '/image/destroy'))
+        'POST', Uri.parse('${CloudinaryBaseApi.baseUrl}${credentials.cloudName}/image/destroy'))
       ..fields.addAll(fields)
       ..fields['signature'] = credentials.getSignature(fields);
 
